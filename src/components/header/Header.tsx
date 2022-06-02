@@ -23,8 +23,9 @@ import DrawerComponent from '../drawer/Drawer'
 export const Header: React.FC<{}> = () => {
   const router = useRouter()
   const theme = useTheme()
-  const isMatch = useMediaQuery(theme.breakpoints.down('md'))
+  const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
   const [openDrawer, setOpenDrawer] = useState(false)
+
   return (
     <>
       <AppBar sx={{ background: 'white', position: 'initial' }}>

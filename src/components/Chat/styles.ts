@@ -3,6 +3,9 @@ import { Paper as MuiPaper } from '@mui/material'
 
 export const Paper = styled(MuiPaper)`
   width: 80vw;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
   height: 80vh;
   max-width: 500px;
   max-height: 700px;

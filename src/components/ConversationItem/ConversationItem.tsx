@@ -12,7 +12,7 @@ import { Conversation, User } from '../../types'
 import Avatare from '../../assets/logo/profil.svg'
 import { Icon } from '../icon/Icon'
 import { fromTimestampToLocaleDate } from '../utils'
-import { UserContext } from '../../pages/context'
+import { UserContext } from '../../pages/contexts'
 
 interface ConversationItemProps {
   conversation: Conversation
@@ -32,13 +32,12 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
       ? conversation.senderNickname
       : conversation.recipientNickname
 
-  console.log(userNickname)
   const onListItemClick = () => {
     router.push(`/messages/${conversation.id}`)
   }
 
   return (
-    <Paper>
+    <Paper style={{ width: '100%' }}>
       <ListItemButton
         selected={ListItemIsSelected}
         onClick={onListItemClick}

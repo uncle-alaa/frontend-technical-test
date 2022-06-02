@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Drawer, List, ListItemText, ListItem, Box } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import LbcLogo from '../../assets/logo/LbcLogo.svg'
 import { Home, Mail } from '@mui/icons-material'
 import { Icon } from '../icon/Icon'
 import { useRouter } from 'next/router'
+import { ShowMobileConversationsContext } from '../../pages/contexts'
 interface DrawerProps {
   openDrawer: boolean
   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>
@@ -14,6 +15,9 @@ const DrawerComponent: React.FC<DrawerProps> = ({
   setOpenDrawer,
 }) => {
   const router = useRouter()
+  const { showConversations, setShowConversations } = useContext(
+    ShowMobileConversationsContext
+  )
   return (
     <>
       <Drawer sx={{}} open={openDrawer} onClose={() => setOpenDrawer(false)}>
@@ -47,6 +51,7 @@ const DrawerComponent: React.FC<DrawerProps> = ({
               onClick={() => {
                 router.push('/messages/1')
                 setOpenDrawer(false)
+                setShowConversations(true)
               }}
             >
               <ListItemIcon>

@@ -6,27 +6,46 @@ import {
   getConversationsByUserID,
   getMessageByConversationId,
 } from '../../components/utils'
+import { useMediaQuery, useTheme } from '@mui/material'
+import { MobileMessages } from '../../components/mobileMessages/MobileMessages'
 
 export default function MessagePage({
   conversations,
   messagesOfConversations,
 }) {
-  console.log(conversations, 'conv')
-  const router = useRouter()
-  console.log(router.pathname)
+  const theme = useTheme()
+  const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Header />
-      <DesktopMessages
-        messagesOfConversations={messagesOfConversations}
-        conversations={conversations}
-      />
-    </div>
+    <>
+      {!isMatch ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Header />
+          <DesktopMessages
+            messagesOfConversations={messagesOfConversations}
+            conversations={conversations}
+          />
+        </div>
+      ) : (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Header />
+          <MobileMessages
+            messagesOfConversations={messagesOfConversations}
+            conversations={conversations}
+          />
+        </div>
+      )}
+    </>
   )
 }
 
@@ -39,6 +58,7 @@ export const getServerSideProps = async ({ params }) => {
       conversation.id
     )
   }
+  console.log(messagesOfConversations, 'messages')
   if (params.id == {}) {
     return {
       redirect: {

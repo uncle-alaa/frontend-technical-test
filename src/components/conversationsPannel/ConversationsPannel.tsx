@@ -1,20 +1,25 @@
-import { ListItem, Paper } from '@mui/material'
+import { ListItem } from '@mui/material'
 import { ConversationItem } from '../ConversationItem/ConversationItem'
-import { ConversationsContainer } from './styles'
+import { ConversationsContainer, Paper } from './styles'
 import { Conversation } from '../../types'
 
 type ConversationsPannelProps = {
   conversations: Conversation[]
+  selectConversation?: any
 }
 
 export const ConversationPannel: React.FC<ConversationsPannelProps> = ({
   conversations,
+  selectConversation,
 }) => {
   return (
-    <Paper sx={{ width: '30%' }}>
+    <Paper>
       <ConversationsContainer>
         {conversations.map((conversation) => (
           <ListItem
+            onClick={() =>
+              selectConversation ? selectConversation(false) : null
+            }
             key={conversation.id}
             alignItems="flex-start"
             disablePadding
