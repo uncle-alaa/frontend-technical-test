@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   AppBar,
   Badge,
@@ -19,13 +19,28 @@ import { Icon } from '../icon/Icon'
 import { Toolbar, IconContainer } from './styles'
 import { useRouter } from 'next/router'
 import DrawerComponent from '../drawer/Drawer'
+import { getLoggedUserId } from '../../utils/getLoggedUserId'
+import { useDispatch } from 'react-redux'
+import useSWR from 'swr'
+import { setLoggedUser } from '../../store/user/slice'
 
-export const Header: React.FC<{}> = () => {
+export const Header: React.FC = () => {
   const router = useRouter()
   const theme = useTheme()
   const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
   const [openDrawer, setOpenDrawer] = useState(false)
 
+  const loggedUserId = getLoggedUserId()
+  const dispatch = useDispatch()
+  const fetcher = (url) => fetch(url).then((res) => res.json())
+  const { data } = useSWR(`http://localhost:3005/user/${loggedUserId}`, fetcher)
+  const loggedUser = data ? data[0] : null
+
+  useEffect(() => {
+    if (loggedUser) {
+      dispatch(setLoggedUser(loggedUser))
+    }
+  }, [loggedUser])
   return (
     <>
       <AppBar sx={{ background: 'white', position: 'initial' }}>

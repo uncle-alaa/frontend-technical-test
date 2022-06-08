@@ -1,25 +1,19 @@
 import { ListItem } from '@mui/material'
 import { ConversationItem } from '../ConversationItem/ConversationItem'
 import { ConversationsContainer, Paper } from './styles'
-import { Conversation } from '../../types'
+import { useDispatch, useSelector } from 'react-redux'
+import { setShowMobileConversations } from '../../store/ui/slice'
+import { getConversations } from '../../store/selectors/conversations'
 
-type ConversationsPannelProps = {
-  conversations: Conversation[]
-  selectConversation?: any
-}
-
-export const ConversationPannel: React.FC<ConversationsPannelProps> = ({
-  conversations,
-  selectConversation,
-}) => {
+export const ConversationPannel: React.FC = ({}) => {
+  const dispatch = useDispatch()
+  const conversations = useSelector(getConversations)
   return (
     <Paper>
       <ConversationsContainer>
         {conversations.map((conversation) => (
           <ListItem
-            onClick={() =>
-              selectConversation ? selectConversation(false) : null
-            }
+            onClick={() => dispatch(setShowMobileConversations(false))}
             key={conversation.id}
             alignItems="flex-start"
             disablePadding

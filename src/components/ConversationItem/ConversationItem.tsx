@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
   ListItemText,
   ListItemAvatar,
@@ -12,7 +12,8 @@ import { Conversation, User } from '../../types'
 import Avatare from '../../assets/logo/profil.svg'
 import { Icon } from '../icon/Icon'
 import { fromTimestampToLocaleDate } from '../utils'
-import { UserContext } from '../../pages/contexts'
+import { useSelector } from 'react-redux'
+import { getLoggedUser } from '../../store/selectors/user'
 
 interface ConversationItemProps {
   conversation: Conversation
@@ -25,10 +26,10 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
   const ListItemIsSelected =
     conversation.id == parseInt(router.query.id as string)
 
-  const userNickname: User | null = useContext(UserContext)
+  const loggedUser: User = useSelector(getLoggedUser)
 
   const nameToDisplay =
-    conversation.recipientNickname == userNickname?.nickname
+    conversation.recipientNickname == loggedUser?.nickname
       ? conversation.senderNickname
       : conversation.recipientNickname
 

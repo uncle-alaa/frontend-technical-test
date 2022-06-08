@@ -1,5 +1,4 @@
-import React from 'react'
-import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 import { DesktopMessages } from '../../components/desktopMessages/DesktopMessages'
 import { Header } from '../../components/header/Header'
 import {
@@ -8,6 +7,9 @@ import {
 } from '../../components/utils'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { MobileMessages } from '../../components/mobileMessages/MobileMessages'
+import { useDispatch } from 'react-redux'
+import { setConversations } from '../../store/conversations/slice'
+import { setMessagesOfConversations } from '../../store/messagesOfConversations/slice'
 
 export default function MessagePage({
   conversations,
@@ -15,7 +17,15 @@ export default function MessagePage({
 }) {
   const theme = useTheme()
   const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+  const dispatch = useDispatch()
 
+  useEffect(() => {
+    dispatch(setConversations(conversations))
+  }, [conversations])
+
+  useEffect(() => {
+    dispatch(setMessagesOfConversations({ messagesOfConversations }))
+  }, [messagesOfConversations])
   return (
     <>
       {!isMatch ? (
@@ -26,10 +36,7 @@ export default function MessagePage({
           }}
         >
           <Header />
-          <DesktopMessages
-            messagesOfConversations={messagesOfConversations}
-            conversations={conversations}
-          />
+          <DesktopMessages />
         </div>
       ) : (
         <div
@@ -39,10 +46,7 @@ export default function MessagePage({
           }}
         >
           <Header />
-          <MobileMessages
-            messagesOfConversations={messagesOfConversations}
-            conversations={conversations}
-          />
+          <MobileMessages />
         </div>
       )}
     </>
@@ -51,14 +55,12 @@ export default function MessagePage({
 
 export const getServerSideProps = async ({ params }) => {
   const conversations = await getConversationsByUserID(1)
-  conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp)
   const messagesOfConversations = {}
   for (const conversation of conversations) {
     messagesOfConversations[conversation.id] = await getMessageByConversationId(
       conversation.id
     )
   }
-  console.log(messagesOfConversations, 'messages')
   if (params.id == {}) {
     return {
       redirect: {

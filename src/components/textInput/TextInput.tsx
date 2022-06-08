@@ -1,13 +1,15 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import SendIcon from '@mui/icons-material/Send'
 import { Form, TextField, Button } from './styles'
 import { getLoggedUserId } from '../../utils/getLoggedUserId'
 import { sendMessageToConversation } from '../utils'
 import { useRouter } from 'next/router'
-import { Messages } from '../../pages/contexts'
+import { useDispatch } from 'react-redux'
+import { setMessageOfConversation } from '../../store/messagesOfConversations/slice'
 export const TextInput = () => {
   const router = useRouter()
-  const { messages, setMessages } = useContext(Messages)
+  const dispatch = useDispatch()
+  const conversationId = parseInt(router.query.id as string)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -15,11 +17,17 @@ export const TextInput = () => {
       body: e.target[0].value as string,
       authorId: getLoggedUserId(),
       timestamp: Math.floor(Date.now() / 1000),
-      conversationId: parseInt(router.query.id as string),
+      conversationId: conversationId,
     }
-    sendMessageToConversation(messageBody)
+    sendMessageToConversation(messageBody).then((sentMessage) =>
+      dispatch(
+        setMessageOfConversation({
+          idOfConversation: conversationId,
+          message: sentMessage,
+        })
+      )
+    )
     e.target[0].value = ''
-    setMessages((messages) => [...messages, messageBody])
   }
   return (
     <>
